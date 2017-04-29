@@ -13,6 +13,10 @@ var FbAPI = (() => {
     },
     setSingleTodo: (newObject) => {
       todos.push(newObject);
+    },
+    setChecked: (itemId) => {
+      const position = itemId.split("item")[1];
+      todos[position].isCompleted = !todos[position].isCompleted;
     }
   };
 

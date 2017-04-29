@@ -38,6 +38,15 @@ $(document).ready(function(){
     console.log("get todos error", error);
   });
 
+  $('.main-container').on("click", 'input[type=checkbox]', (event) => {
+    FbAPI.checker(event.target.id).then(() => {
+      FbAPI.writeDom();
+      countTask();
+    }).catch((error) => {
+      console.log("error checker", error);
+    });
+  });
+
   let countTask = () => {
     let remainingTasks = $('#incomplete-tasks li').length;
     $('#counter').hide().fadeIn(1000).html(remainingTasks);
