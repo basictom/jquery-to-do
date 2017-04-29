@@ -1,4 +1,6 @@
 body {
   background-color: powderblue;
-  color: tomato;
-  padding: 50px; }
+  color: tomato; }
+
+ul {
+  list-style-type: none; }
