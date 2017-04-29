@@ -2,10 +2,61 @@
 
 body {
   background-color: $blue;
-  color: $red;
+    color: $red;
   // padding: 50px;
 }
 
-ul {
-  list-style-type: none;
+.main-container {
+
+  li {
+    overflow: hidden;
+    padding: 10px 0;
+    border-bottom: 1px solid $grey;
+    * {
+      float:left;
+    }
+  }
+  .checkboxStyle {
+    margin-top: 15px !important;
+  }
+  .task {
+    font-size: 18px;
+    line-height: 34px;
+    padding: 0 0 0 10px;
+  }
+  #completed-tasks {
+    .task {
+      text-decoration: line-through;
+      color: $strike;
+    }
+  }
+  .row {
+    text-align:center;
+  }
+  h3 {
+    border-bottom: 2px solid $black;
+    margin: 10px 0;
+    padding: 10px 0;
+    span {
+     background-color: $red;
+     color: $white;
+     font-size: 12px;
+     text-align: center;
+     letter-spacing: 0;
+     display: inline-block;
+     position: relative;
+     border-radius: 2px;
+     height: 22px;
+     width: 26px;
+     padding: 4px 0 0 0;
+     float: right;
+   }
+  }
+
+}
+
+.list-container {
+  .row {
+    text-align:center;
+  }
 }
