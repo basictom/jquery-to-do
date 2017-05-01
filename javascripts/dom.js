@@ -4,7 +4,6 @@ var FbAPI = ((otherOldCrap) => {
     let doneString = "";
     let notDoneString = "";
     let todos = FbAPI.todoGetter();
-    console.log("rain down in africa", todos);
 
     todos.forEach((todo) => {
       if (todo.isCompleted) {

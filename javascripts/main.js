@@ -38,6 +38,20 @@ $(document).ready(function(){
     console.log("get todos error", error);
   });
 
+
+  // Delete function
+
+  $('.main-container').on('click', '.delete', (event) => {
+    FbAPI.deleteTodo(event.target.id)
+    .then(() => {
+      FbAPI.writeDom();
+      countTask();
+    }).catch((error) => {
+      console.log("error in the delete to do", error);
+    });
+  });
+
+
   $('.main-container').on("click", 'input[type=checkbox]', (event) => {
     FbAPI.checker(event.target.id).then(() => {
       FbAPI.writeDom();

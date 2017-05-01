@@ -40,6 +40,13 @@ var FbAPI = ((oldCrap) => {
     });
   };
 
+  oldCrap.deleteTodo = (id) => {
+    return new Promise((resolve, reject) => {
+      FbAPI.duhlete(id);
+      resolve();
+    });
+  };
+
   return oldCrap;
 
 })(FbAPI || {});
