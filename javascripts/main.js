@@ -1,86 +1,89 @@
 $(document).ready(function(){
+  let apiKeys;
+  let editId = "";
 
-  $("#new-item").on("click", () => {
-    $('.list-container').addClass('hide');
-    $(".new-container").removeClass("hide");
+	$('#new-item').click(() => {
+		$('.list-container').addClass('hide');
+		$('.new-container').removeClass('hide');
+	});
+
+	$('#list-items').click(() => {
+		$('.new-container').addClass('hide');
+		$('.list-container').removeClass('hide');
+	});
+
+  FbApi.firebaseCredentials().then((keys) => {
+    apiKeys = keys;
+    firebase.initializeApp(apiKeys);
+    FbApi.writeDom(apiKeys);
+  }).catch((error) => {
+    console.log("key errors", error);
   });
 
-  $("#list-items").on("click", () => {
-    $('.new-container').addClass('hide');
-    $('.list-container').removeClass('hide');
-  });
-
-  $('#add-todo-button').on("click", () => {
-    let newTodo = {
-      isCompleted: false,
-      task: $('#add-todo-text').val()
-    };
-    console.log("newtodo", newTodo);
-    FbAPI.addTodo(newTodo).then(() => {
-      $('#add-todo-text').val("");
-      $('.new-container').addClass('hide');
-      $('.list-container').removeClass('hide');
-      FbAPI.writeDom();
-      countTask();
-    }).catch((error) => {
-      console.log("add to error", error);
-    });
-  });
-
-
-
-  FbAPI.getTodos()
-  .then(() => {
-    FbAPI.writeDom();
-    countTask();
-  })
-  .catch((error) => {
-    console.log("get todos error", error);
+  //add todo
+  $('#add-todo-button').click(() => {
+  	let newTodo = {
+  		isCompleted: false,
+  		task: $('#add-todo-text').val()
+  	};
+    if(editId.length > 0){
+      //edit
+      FbApi.editTodo(apiKeys, newTodo, editId).then(() => {
+        $('#add-todo-text').val("");
+        editId = "";
+        $('.new-container').addClass('hide');
+        $('.list-container').removeClass('hide');
+        FbApi.writeDom(apiKeys);
+      }).catch((error) => {
+        console.log("addTodo error", error);
+      });
+    } else{
+      FbApi.addTodo(apiKeys, newTodo).then(() => {
+        $('#add-todo-text').val("");
+        $('.new-container').addClass('hide');
+        $('.list-container').removeClass('hide');
+        FbApi.writeDom(apiKeys);
+      }).catch((error) => {
+        console.log("addTodo error", error);
+      });
+    }
   });
 
 
-  // Delete function
-
+  //delete todo
   $('.main-container').on('click', '.delete', (event) => {
-    FbAPI.deleteTodo(event.target.id)
-    .then(() => {
-      FbAPI.writeDom();
-      countTask();
+    FbApi.deleteTodo(apiKeys, event.target.id).then(() => {
+      FbApi.writeDom(apiKeys);
     }).catch((error) => {
-      console.log("error in the delete to do", error);
+      console.log("error in deleteTodo", error);
     });
   });
 
-  // Edit function
 
+  //edit todo
   $('.main-container').on('click', '.edit', (event) => {
     let editText = $(event.target).closest('.col-xs-4').siblings('.col-xs-8').find('.task').html();
-    FbAPI.editTodo(event.target.id)
-    .then(() =>{
-      $('.list-container').addClass('hide');
-      $(".new-container").removeClass("hide");
-      $('#add-todo-text').val(editText);
-    }).catch((error) => {
-      console.log("error in the edit to do", error);
-    });
-
+    editId = event.target.id;
+    $('.list-container').addClass('hide');
+    $('.new-container').removeClass('hide');
+    $('#add-todo-text').val(editText);
   });
 
 
-  $('.main-container').on("click", 'input[type=checkbox]', (event) => {
-    FbAPI.checker(event.target.id).then(() => {
-      FbAPI.writeDom();
-      countTask();
-    }).catch((error) => {
-      console.log("error checker", error);
-    });
+
+
+  //complete todos
+  $('.main-container').on('click', 'input[type="checkbox"]', (event)=>{
+  	let myTodo = {
+      isCompleted: event.target.checked,
+      task: $(event.target).siblings('.task').html()
+    };
+    FbApi.editTodo(apiKeys, myTodo,event.target.id).then(() =>{
+  		FbApi.writeDom(apiKeys);
+  	}).catch((error) => {
+  		console.log("checker error", error);
+  	});
   });
-
-  let countTask = () => {
-    let remainingTasks = $('#incomplete-tasks li').length;
-    $('#counter').hide().fadeIn(1000).html(remainingTasks);
-  };
-
 
 
 
@@ -92,15 +95,44 @@ $(document).ready(function(){
     let user = {email, password};
     // ES6 Notation on an object when the key and the value are the same
 
-    FbAPI.registerUser(user).then((response) => {
+    FbApi.registerUser(user).then((response) => {
       console.log("register response", response);
+      let newUser = {
+        uid      : response.uid,
+        username : username
+      };
+      FbApi.addUser(newUser).then((response) => {
+        console.log("addUser", response);
+      }).catch((error) => {
+        console.log("error in adduser", error);
+      });
     }).catch((error) => {
       console.log("registered User error", error);
     });
 
   });
 
+  let clearLogin = () => {
+    $('#inputEmail').val("");
+    $('#inputPassword').val("");
+    $('#inputUsername').val("");
+  };
 
+  $('#loginButton').click(() => {
+    let email = $('#inputEmail').val();
+    let password = $('#inputPassword').val();
+
+    let user = {email, password};
+
+    FbApi.loginUser(user).then((response) => {
+      clearLogin();
+      $('#loginContainer').addClass("hide");
+      $('.main-contianer').removeClass("hide");
+      console.log(response);
+    }).catch((error) => {
+      console.log("error in loginuser", error);
+    });
+  });
 
 
 

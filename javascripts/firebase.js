@@ -1,27 +1,17 @@
-var FbAPI = (() => {
+var FbApi =  (() => {
+	let todos = [];
 
-  let todos = [];
-
-
-
-  return {
-
-
-      firebaseCreds : () => {
-     			return new Promise((resolve, reject) => {
-     				$.ajax("apiKeys.json" )
-     				.done((data) => {
-              console.log("firebase js", data);
-     					resolve(data);
-     				})
-     				.fail((error) => {
-              console.log("firebase js", error);
-     					reject(error);
-     				});
-     		});
-
-      }
-  };
-
-
+	return {
+		firebaseCredentials : () => {
+			return new Promise((resolve, reject) => {
+				$.ajax("apiKeys.json")
+				.done((data) => {
+					resolve(data);
+				})
+				.fail((error) => {
+					reject(error);
+				});
+			});
+		}
+	};
 })();
