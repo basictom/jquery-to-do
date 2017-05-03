@@ -1,13 +1,13 @@
 var FbAPI = ((oldCrap) => {
 
-  oldCrap.getTodos = () => {
+  oldCrap.getTodos = (apiKeys) => {
     return new Promise ((resolve, reject) => {
 
       let items = [];
 
-      $.ajax('./database/seed.json')
+      $.ajax(`${apiKeys.databaseURL}/items.json`)
       .done((data) => {
-        let response = data.items;
+        let response = items;
         Object.keys(response).forEach((key) => {
           console.log("keys", key);
           response[key].id = key;
@@ -15,7 +15,6 @@ var FbAPI = ((oldCrap) => {
           // putting in id : item0 into object
           items.push(response[key]);
         });
-        FbAPI.setTodos(items);
         resolve(items);
       })
       .fail((error) => {
@@ -24,8 +23,19 @@ var FbAPI = ((oldCrap) => {
     });
   };
 
-  oldCrap.addTodo = (newTodo) => {
+  oldCrap.addTodo = (apiKeys, newTodo) => {
     return new Promise ((resolve, reject) => {
+
+      $.ajax({
+        method : 'POST',
+           url : `${apiKeys.databaseURL}/items.json`,
+          data : JSON.stringify(newTodo)
+      }).done(() => {
+        resolve();
+      }).fail(() => {
+        reject();
+      });
+
       newTodo.id = `item${FbAPI.todoGetter().length}`;
       console.log("newtodo", newTodo);
       FbAPI.setSingleTodo(newTodo);
@@ -33,24 +43,38 @@ var FbAPI = ((oldCrap) => {
     });
   };
 
-  oldCrap.checker = (id) => {
+  oldCrap.checker = (apiKeys, id) => {
     return new Promise((resolve, reject) => {
       FbAPI.setChecked(id);
       resolve();
     });
   };
 
-  oldCrap.deleteTodo = (id) => {
+  oldCrap.deleteTodo = (apiKeys, id) => {
     return new Promise((resolve, reject) => {
-      FbAPI.duhlete(id);
-      resolve();
+      $.ajax({
+        method : 'DELETE',
+           url : `${apiKeys.databaseURL}/items/${id}.json`
+      }).done(() => {
+        resolve();
+      }).fail((error) => {
+        reject(error);
+        console.log("delete promise error", error);
+      });
     });
   };
 
-  oldCrap.editTodo = (id) => {
+  oldCrap.editTodo = (apiKeys, editTodo, id) => {
     return new Promise((resolve, reject) => {
-      FbAPI.duhlete(id);
-      resolve();
+      $.ajax({
+        method : 'PUT',
+           url : `${apiKeys.databaseURL}/items/${id}.json`,
+          data : JSON.stringify(editTodo)
+      }).done(() => {
+        resolve();
+      }).fail(() => {
+        reject();
+      });
     });
   };
 

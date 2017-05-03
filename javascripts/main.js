@@ -81,4 +81,27 @@ $(document).ready(function(){
     $('#counter').hide().fadeIn(1000).html(remainingTasks);
   };
 
+
+
+
+  $('#registerButton').click(() => {
+    let email = $('#inputEmail').val();
+    let password = $('#inputPassword').val();
+    let username = $('#inputUsername').val();
+
+    let user = {email, password};
+    // ES6 Notation on an object when the key and the value are the same
+
+    FbAPI.registerUser(user).then((response) => {
+      console.log("register response", response);
+    }).catch((error) => {
+      console.log("registered User error", error);
+    });
+
+  });
+
+
+
+
+
 });
