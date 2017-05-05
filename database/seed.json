@@ -6,12 +6,12 @@
       "uid" : "8BnwVukT6bYhSbJSXdZSPhihci62"
     },
     "item1" : {
-      "isCompleted" : false,
+      "isCompleted" : true,
       "task" : "eat chips",
       "uid" : "xS8BSy1xpfU28ytW53ZGzkiwPlE3"
     },
     "item2" : {
-      "isCompleted" : false,
+      "isCompleted" : true,
       "task" : "take a nap",
       "uid" : "xS8BSy1xpfU28ytW53ZGzkiwPlE3"
     }
