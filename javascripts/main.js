@@ -69,9 +69,6 @@ $(document).ready(function(){
     $('#add-todo-text').val(editText);
   });
 
-
-
-
   //complete todos
   $('.main-container').on('click', 'input[type="checkbox"]', (event)=>{
   	let myTodo = {
@@ -86,30 +83,32 @@ $(document).ready(function(){
   });
 
 
-
   $('#registerButton').click(() => {
     let email = $('#inputEmail').val();
     let password = $('#inputPassword').val();
     let username = $('#inputUsername').val();
 
     let user = {email, password};
-    // ES6 Notation on an object when the key and the value are the same
-
     FbApi.registerUser(user).then((response) => {
-      console.log("register response", response);
       let newUser = {
-        uid      : response.uid,
-        username : username
+        uid: response.uid,
+        username: username
       };
-      FbApi.addUser(newUser).then((response) => {
-        console.log("addUser", response);
+      FbApi.addUser(apiKeys, newUser).then((response) => {
+        FbApi.loginUser(user).then((response) => {
+          clearLogin();
+          $('#login-container').addClass('hide');
+          $('.main-container').removeClass('hide');
+          FbApi.writeDom(apiKeys);
+        }).catch((error) => {
+          console.log("error in loginUser", error);
+        });
       }).catch((error) => {
-        console.log("error in adduser", error);
+        console.log("error in addUser", error);
       });
     }).catch((error) => {
-      console.log("registered User error", error);
+      console.log("error in registerUser", error);
     });
-
   });
 
   let clearLogin = () => {
@@ -121,19 +120,25 @@ $(document).ready(function(){
   $('#loginButton').click(() => {
     let email = $('#inputEmail').val();
     let password = $('#inputPassword').val();
-
     let user = {email, password};
 
     FbApi.loginUser(user).then((response) => {
       clearLogin();
-      $('#loginContainer').addClass("hide");
-      $('.main-contianer').removeClass("hide");
-      console.log(response);
+      $('#login-container').addClass('hide');
+      $('.main-container').removeClass('hide');
+      FbApi.createLogoutButton(apiKeys);
+      FbApi.writeDom(apiKeys);
     }).catch((error) => {
-      console.log("error in loginuser", error);
+      console.log("error in loginUser", error);
     });
+
   });
 
-
+  $('#logout-container').on("click", '#logoutButton', () => {
+    clearLogin();
+    FbApi.logoutUser();
+    $('#login-container').removeClass('hide');
+    $('.main-container').addClass('hide');
+  });
 
 });

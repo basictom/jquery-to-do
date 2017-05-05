@@ -1,24 +1,34 @@
 var FbApi = ((cats) => {
-  cats.registerUser = (credentials) => {
-    return new Promise((resolve, reject) => {
-        firebase.auth().createUserWithEmailAndPassword(credentials.email, crendetials.password).then(() => {
-          resolve(authData);
-        }).catch((error) => {
-          console.log("user email password", error);
-          reject(error);
-        });
-    });
+
+	cats.registerUser = (credentials) =>{
+		return new Promise((resolve, reject) => {
+			firebase.auth().createUserWithEmailAndPassword(credentials.email, credentials.password)
+			.then((authData) => {
+				resolve(authData);
+			}).catch((error) => {
+				reject(error);
+			});
+		});
+	};
+
+	cats.loginUser = (creds) => {
+		return new Promise((resolve, reject) => {
+			firebase.auth().signInWithEmailAndPassword(creds.email, creds.password)
+			.then((authData) => {
+				resolve(authData);
+			}).catch((error) => {
+				reject(error);
+			});
+		});
+	};
+
+  cats.credentialsCurrentUser = () => {
+    return firebase.auth().currentUser;
   };
 
-  cats.loginUser = (creds) => {
-    return new Promise((resolve, reject) => {
-      firebase.auth().signInWithEmailAndPassword()
-      .then((authData) => {
-        resolve(authData);
-      }).catch((error) => {
-        reject(error);
-      });
-    });
+  cats.logoutUser = () => {
+    firebase.auth().signOut();
   };
-  return cats;
+
+	return cats;
 })(FbApi || {});

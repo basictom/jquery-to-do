@@ -10,7 +10,6 @@ var FbApi = ((otherOldCrap) => {
       let todos = results;
       let doneString = "";
       let notDoneString = "";
-      console.log("todos in writeDom", todos);
 
       todos.forEach((todo) => {
         if (todo.isCompleted) {
@@ -43,6 +42,17 @@ var FbApi = ((otherOldCrap) => {
       otherOldCrap.countTask();
     }).catch((error) => {
       console.log("writedom error", error);
+    });
+  };
+
+  otherOldCrap.createLogoutButton = (apiKey) => {
+    let uid = FbApi.credentialsCurrentUser().uid;
+    FbApi.getUser(apiKey, uid).then((user) => {
+      console.log("create buton", user);
+        let logoutButton = `<button class="btn btn-danger" id="logoutButton">Logout ${user.username}</button>`;
+        $('#logout-container').html(logoutButton);
+    }).catch((error) => {
+      console.log("log out error", error);
     });
   };
 
