@@ -48,7 +48,6 @@ var FbApi = ((otherOldCrap) => {
   otherOldCrap.createLogoutButton = (apiKey) => {
     let uid = FbApi.credentialsCurrentUser().uid;
     FbApi.getUser(apiKey, uid).then((user) => {
-      console.log("create buton", user);
         let logoutButton = `<button class="btn btn-danger" id="logoutButton">Logout ${user.username}</button>`;
         $('#logout-container').html(logoutButton);
     }).catch((error) => {
